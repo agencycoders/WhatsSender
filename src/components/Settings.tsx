@@ -1,5 +1,5 @@
-import React from 'react';
-import { Settings as SettingsIcon, User, Key, Bell, Database, Shield, HelpCircle, MessageSquare, Mail } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Settings as SettingsIcon, User, Key, Bell, Database, Shield, HelpCircle, MessageSquare, Mail, Camera, Eye, EyeOff } from 'lucide-react';
 import ApiSettings from './ApiSettings';
 
 interface SettingSection {
@@ -14,14 +14,33 @@ interface SettingItem {
   id: string;
   label: string;
   description?: string;
-  type: 'toggle' | 'input' | 'select';
+  type: 'toggle' | 'input' | 'select' | 'password' | 'custom';
   value?: string | boolean;
   options?: { label: string; value: string }[];
   icon?: React.ReactNode;
   placeholder?: string;
+  showPassword?: boolean;
+  onTogglePassword?: () => void;
+  render?: () => React.ReactNode;
 }
 
 const Settings: React.FC = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatarPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const settingSections: SettingSection[] = [
     {
       id: 'account',
@@ -29,6 +48,41 @@ const Settings: React.FC = () => {
       description: 'Gerencie suas informações de conta e preferências',
       icon: <User className="w-5 h-5" />,
       items: [
+        {
+          id: 'avatar',
+          label: 'Avatar',
+          type: 'custom',
+          render: () => (
+            <div className="flex items-center space-x-4">
+              <div className="relative">
+                <div className="w-16 h-16 rounded-full bg-[#2A373F] flex items-center justify-center overflow-hidden">
+                  {avatarPreview ? (
+                    <img src={avatarPreview} alt="Avatar" className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-2xl text-[#8696A0]">JS</span>
+                  )}
+                </div>
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="absolute bottom-0 right-0 p-1.5 bg-[#00A884] rounded-full text-[#202C33] hover:bg-[#00A884]/90 transition-colors"
+                >
+                  <Camera className="w-4 h-4" />
+                </button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleAvatarChange}
+                  className="hidden"
+                />
+              </div>
+              <div className="flex-1">
+                <p className="text-[#E9EDEF] text-sm font-medium mb-1">Alterar foto do perfil</p>
+                <p className="text-[#8696A0] text-xs">Clique no ícone da câmera para alterar sua foto</p>
+              </div>
+            </div>
+          )
+        },
         {
           id: 'name',
           label: 'Nome',
@@ -44,6 +98,26 @@ const Settings: React.FC = () => {
           value: 'joao.silva@email.com',
           icon: <Mail className="w-5 h-5 text-[#8696A0]" />,
           placeholder: 'Digite seu email'
+        },
+        {
+          id: 'current_password',
+          label: 'Senha Atual',
+          type: 'password',
+          value: '',
+          icon: <Key className="w-5 h-5 text-[#8696A0]" />,
+          placeholder: 'Digite sua senha atual',
+          showPassword: showPassword,
+          onTogglePassword: () => setShowPassword(!showPassword)
+        },
+        {
+          id: 'new_password',
+          label: 'Nova Senha',
+          type: 'password',
+          value: '',
+          icon: <Key className="w-5 h-5 text-[#8696A0]" />,
+          placeholder: 'Digite sua nova senha',
+          showPassword: showNewPassword,
+          onTogglePassword: () => setShowNewPassword(!showNewPassword)
         }
       ]
     },
@@ -100,6 +174,8 @@ const Settings: React.FC = () => {
 
   const renderSettingItem = (item: SettingItem) => {
     switch (item.type) {
+      case 'custom':
+        return item.render?.();
       case 'toggle':
         return (
           <label className="relative inline-flex items-center cursor-pointer">
@@ -112,6 +188,7 @@ const Settings: React.FC = () => {
             <div className="w-11 h-6 bg-[#2A373F] rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-[#8696A0] after:border-[#8696A0] after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#00A884] after:bg-[#202C33] peer-checked:after:bg-[#202C33]"></div>
           </label>
         );
+      case 'password':
       case 'input':
         return (
           <div className="relative">
@@ -121,14 +198,27 @@ const Settings: React.FC = () => {
               </div>
             )}
             <input
-              type="text"
+              type={item.type === 'password' ? (item.showPassword ? 'text' : 'password') : 'text'}
               value={item.value as string}
               placeholder={item.placeholder}
               onChange={() => {}}
               className={`bg-[#2A373F] text-[#E9EDEF] rounded-lg border border-[#2A373F] focus:outline-none focus:border-[#00A884] w-full transition-colors duration-200 ${
-                item.icon ? 'pl-10 pr-3' : 'px-3'
-              } py-2 placeholder-[#8696A0]`}
+                item.icon ? 'pl-10' : 'px-3'
+              } ${item.type === 'password' ? 'pr-10' : 'pr-3'} py-2 placeholder-[#8696A0]`}
             />
+            {item.type === 'password' && (
+              <button
+                type="button"
+                onClick={item.onTogglePassword}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#8696A0] hover:text-[#E9EDEF] transition-colors"
+              >
+                {item.showPassword ? (
+                  <EyeOff className="w-5 h-5" />
+                ) : (
+                  <Eye className="w-5 h-5" />
+                )}
+              </button>
+            )}
           </div>
         );
       case 'select':
