@@ -1,0 +1,178 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Poppins', sans-serif;
+  }
+
+  body {
+    @apply bg-[#0C1317] text-[#E9EDEF] font-sans min-h-screen;
+  }
+
+  #root {
+    @apply h-screen flex flex-col;
+  }
+
+  h1 {
+    @apply text-2xl font-medium text-[#E9EDEF];
+  }
+
+  h2 {
+    @apply text-xl font-medium text-[#E9EDEF];
+  }
+
+  h3 {
+    @apply text-lg font-medium text-[#E9EDEF];
+  }
+
+  p {
+    @apply text-[#8696A0];
+  }
+  
+  /* Estilos base para elementos HTML */
+  h1 {
+    @apply text-heading-1 text-anti-flash-white;
+  }
+  h2 {
+    @apply text-heading-2 text-anti-flash-white;
+  }
+  h3 {
+    @apply text-heading-3 text-anti-flash-white;
+  }
+  p {
+    @apply text-body-large text-pistachio;
+  }
+  
+  /* Estilos para inputs e botões */
+  input, textarea {
+    @apply bg-forest text-anti-flash-white placeholder-pistachio rounded-lg p-2.5
+           focus:outline-none focus:ring-2 focus:ring-caribbean-green
+           transition-all duration-200;
+  }
+  
+  button {
+    @apply transition-all duration-200 text-anti-flash-white hover:text-caribbean-green;
+  }
+
+  a {
+    @apply text-caribbean-green hover:text-mountain-meadow transition-colors duration-200;
+  }
+}
+
+@layer components {
+  /* Cards */
+  .card {
+    @apply bg-[#202C33] rounded-xl border border-[#2A373F];
+  }
+  
+  /* Status Badges */
+  .badge {
+    @apply px-2 py-1 text-xs font-medium rounded-full;
+  }
+  .badge-success {
+    @apply bg-[#00A884]/10 text-[#00A884];
+  }
+  .badge-warning {
+    @apply bg-[#8696A0]/10 text-[#8696A0];
+  }
+  .badge-error {
+    @apply bg-[#EF4444]/10 text-[#EF4444];
+  }
+  .badge-info {
+    @apply bg-info/10 text-info;
+  }
+  
+  /* Data Display */
+  .stat-card {
+    @apply bg-dark-green rounded-xl p-6 flex flex-col gap-2 border border-bangladesh-green/20;
+  }
+  .stat-value {
+    @apply text-heading-2 text-caribbean-green font-semibold;
+  }
+  .stat-label {
+    @apply text-body-medium text-pistachio;
+  }
+  
+  /* Tables */
+  .table-container {
+    @apply w-full overflow-x-auto rounded-xl bg-dark-green border border-bangladesh-green/20;
+  }
+  .table {
+    @apply w-full border-collapse;
+  }
+  .table th {
+    @apply px-6 py-3 text-left text-body-small font-medium text-caribbean-green bg-forest;
+  }
+  .table td {
+    @apply px-6 py-4 text-body-medium text-anti-flash-white border-t border-bangladesh-green/20;
+  }
+  .table tr:hover {
+    @apply bg-forest/50;
+  }
+  
+  /* Forms */
+  .form-group {
+    @apply flex flex-col gap-2 mb-4;
+  }
+  .form-label {
+    @apply text-body-medium text-caribbean-green font-medium;
+  }
+  .form-input {
+    @apply bg-forest text-anti-flash-white placeholder-pistachio rounded-lg p-2.5
+           focus:outline-none focus:ring-2 focus:ring-caribbean-green
+           transition-all duration-200;
+  }
+  .form-error {
+    @apply text-body-small text-error mt-1;
+  }
+  
+  /* Buttons */
+  .btn {
+    @apply px-4 py-2 rounded-lg font-medium transition-all duration-200;
+  }
+  .btn-primary {
+    @apply bg-[#00A884] text-[#202C33] hover:bg-[#00A884]/90;
+  }
+  .btn-secondary {
+    @apply bg-[#2A373F] text-[#E9EDEF] hover:bg-[#2A373F]/80;
+  }
+  .btn-outline {
+    @apply border-2 border-caribbean-green text-caribbean-green hover:bg-caribbean-green/10;
+  }
+
+  .nav-item {
+    @apply flex items-center space-x-2 px-4 py-3 rounded-xl transition-all duration-200
+           text-pistachio hover:text-caribbean-green hover:bg-forest;
+  }
+  .nav-item.active {
+    @apply bg-forest text-caribbean-green;
+  }
+
+  .input {
+    @apply bg-[#2A373F] text-[#E9EDEF] px-3 py-2 rounded-lg border border-[#2A373F] 
+           focus:outline-none focus:border-[#00A884] placeholder-[#8696A0]
+           transition-all duration-200;
+  }
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-[#202C33];
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-[#2A373F] rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-[#8696A0];
+} 
